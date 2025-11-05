@@ -56,140 +56,16 @@ Escolha uma das opções abaixo:
 
 ## Opção A: Instalação Local com MySQL
 
-### Pré-requisitos: Instalar MySQL
+### Pré-requisitos
 
-#### Windows
+**Instalar MySQL:**
+- **Windows:** Baixe em https://dev.mysql.com/downloads/installer/ e instale o "Developer Default"
+- **Linux:** `sudo apt install mysql-server` (Ubuntu/Debian) ou equivalente
+- **macOS:** `brew install mysql`
 
-**Passo a passo completo:**
-
-1. **Baixe o MySQL Installer:**
-   - Acesse: https://dev.mysql.com/downloads/installer/
-   - Escolha a opção **"mysql-installer-community"** (versão web ou offline)
-   - A versão **web** é menor (~2MB) e baixa os componentes durante a instalação
-   - A versão **offline** é maior (~400MB) mas não precisa de internet durante instalação
-
-2. **Execute o instalador:**
-   - Clique com botão direito e escolha **"Executar como administrador"**
-   - Aceite os termos de licença
-   - Escolha **"Developer Default"** (inclui MySQL Server, Workbench, etc.)
-
-3. **Durante a instalação:**
-   - Se aparecer algum aviso sobre dependências faltando (como Visual C++), clique em "Execute" para instalar automaticamente
-   - Aguarde a instalação dos componentes (pode levar alguns minutos)
-   - Na tela **"Type and Networking"**, mantenha as opções padrão:
-     - Config Type: **Development Computer**
-     - Port: **3306** (porta padrão)
-
-4. **Configure o servidor:**
-   - Na tela **"Authentication Method"**, escolha:
-     - **"Use Strong Password Encryption"** (recomendado para MySQL 8.0+)
-   - Na tela **"Accounts and Roles"**:
-     - **Defina uma senha para o usuário `root`** (ANOTE ESSA SENHA, você precisará!)
-     - Opcional: Crie um usuário adicional se desejar
-
-5. **Finalize a instalação:**
-   - Na tela **"Windows Service"**, mantenha:
-     - Windows Service Name: **MySQL80** (ou MySQL)
-     - ✅ **Start the MySQL Server at System Startup** (marcado)
-     - ✅ **Run Windows Service as** → **Standard System Account**
-   - Clique em **"Execute"** para aplicar as configurações
-   - Aguarde a conclusão e clique em **"Finish"**
-
-6. **Adicionar MySQL ao PATH (opcional, mas recomendado):**
-   
-   O MySQL geralmente é instalado em: `C:\Program Files\MySQL\MySQL Server 8.0\bin`
-   
-   Para adicionar ao PATH:
-   - Pressione **Win + X** e escolha **"Sistema"**
-   - Clique em **"Configurações avançadas do sistema"**
-   - Clique em **"Variáveis de Ambiente"**
-   - Em **"Variáveis do sistema"**, encontre **Path** e clique em **"Editar"**
-   - Clique em **"Novo"** e adicione: `C:\Program Files\MySQL\MySQL Server 8.0\bin`
-   - Clique em **"OK"** em todas as janelas
-   - **Feche e abra novamente o terminal** para que as mudanças tenham efeito
-
-7. **Verificar se o MySQL está rodando:**
-
-   **Opção 1 - Via Services (Serviços do Windows):**
-   - Pressione **Win + R**
-   - Digite: `services.msc` e pressione Enter
-   - Procure por **"MySQL80"** ou **"MySQL"**
-   - O status deve estar como **"Em execução"**
-   - Se não estiver, clique com botão direito → **"Iniciar"**
-
-   **Opção 2 - Via Terminal (PowerShell como Administrador):**
-   ```powershell
-   # Verificar status do serviço
-   Get-Service -Name MySQL80
-   
-   # Se não estiver rodando, iniciar:
-   net start MySQL80
-   ```
-
-8. **Testar conexão com o MySQL:**
-   
-   Abra um novo terminal (PowerShell ou CMD) e execute:
-   ```powershell
-   mysql -u root -p
-   ```
-   
-   - Digite a senha que você configurou durante a instalação
-   - Se conseguir conectar, você verá: `mysql>`
-   - Digite `exit;` para sair
-   
-   **Se aparecer erro "mysql não é reconhecido":**
-   - O MySQL não está no PATH, use o caminho completo:
-   ```powershell
-   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
-   ```
-   - Ou adicione ao PATH conforme passo 6 acima
-
-9. **MySQL Workbench (opcional, mas útil):**
-   
-   O MySQL Workbench geralmente é instalado automaticamente com o "Developer Default". Você pode usá-lo para:
-   - Gerenciar bancos de dados visualmente
-   - Executar queries SQL
-   - Criar e gerenciar tabelas
-   
-   Procure por "MySQL Workbench" no menu Iniciar.
-
-#### Linux (Ubuntu/Debian)
-```bash
-# Instalar MySQL
-sudo apt update
-sudo apt install mysql-server
-
-# Iniciar serviço MySQL
-sudo systemctl start mysql
-sudo systemctl enable mysql
-
-# Verificar status
-sudo systemctl status mysql
-
-# Configurar segurança (opcional, mas recomendado)
-sudo mysql_secure_installation
-```
-
-#### macOS
-```bash
-# Usando Homebrew
-brew install mysql
-
-# Iniciar MySQL
-brew services start mysql
-
-# Verificar status
-brew services list
-```
-
-#### Verificar se MySQL está funcionando
-```bash
-# Conectar ao MySQL
-mysql -u root -p
-
-# Se conseguir conectar, está funcionando!
-# Digite 'exit' para sair
-```
+**Verificar se está rodando:**
+- **Windows:** `Get-Service -Name MySQL80` ou verificar em Services (Win+R → `services.msc`)
+- **Linux/macOS:** `sudo systemctl status mysql` ou `brew services list`
 
 ### 1. Clone o repositório (ou baixe o projeto)
 
@@ -256,10 +132,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 
 ### 4. Configure o banco de dados
 
-#### 4.1. Edite o arquivo `.env`
-
-Edite o arquivo `.env` e configure as credenciais do seu banco de dados:
-
+**Edite o `.env`** e configure as credenciais:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -269,83 +142,25 @@ DB_USERNAME=root
 DB_PASSWORD=sua_senha_aqui
 ```
 
-**Importante:** Substitua `sua_senha_aqui` pela senha que você configurou ao instalar o MySQL.
-
-#### 4.2. Crie o banco de dados
-
-**Para Windows - Você tem 3 opções:**
-
-**Opção 1: Via Linha de Comando (PowerShell/CMD)**
-
-Se o MySQL está no PATH:
-```powershell
+**Crie o banco de dados:**
+```bash
+# Windows (se MySQL estiver no PATH)
 mysql -u root -p
-```
 
-Se o MySQL não está no PATH (use o caminho completo):
-```powershell
+# Windows (se não estiver no PATH)
 "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
-```
 
-Depois de conectar (digite a senha quando solicitado), execute:
-```sql
-CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-exit;
-```
-
-**Opção 2: Via Linha de Comando (sem abrir o MySQL interativamente)**
-
-Se o MySQL está no PATH:
-```powershell
-mysql -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-```
-
-Se o MySQL não está no PATH:
-```powershell
-"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-```
-
-**Opção 3: Via MySQL Workbench (Recomendado para iniciantes)**
-
-1. Abra o **MySQL Workbench** (procure no menu Iniciar)
-2. Clique em **"Local instance MySQL80"** (ou clique no ícone de conexão)
-3. Digite a senha do root quando solicitado
-4. No painel lateral esquerdo, clique com botão direito em **"Schemas"**
-5. Selecione **"Create Schema..."**
-6. Em **"Name"**, digite: `todo_list`
-7. Em **"Collation"**, selecione: `utf8mb4_unicode_ci`
-8. Clique em **"Apply"** e depois em **"Finish"**
-9. Pronto! O banco de dados foi criado.
-
-**Para Linux/macOS:**
-
-```bash
-# Conectar ao MySQL
+# Linux/macOS
 sudo mysql -u root -p
-# ou (se não precisar de sudo)
-mysql -u root -p
+```
 
-# Depois de conectar, execute:
+Depois de conectar, execute:
+```sql
 CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 exit;
 ```
 
-**Alternativa via linha de comando (sem abrir o MySQL):**
-
-```bash
-sudo mysql -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-```
-
-**Verificar se o banco foi criado:**
-
-No terminal MySQL:
-```sql
-SHOW DATABASES;
-```
-
-Você deve ver `todo_list` na lista.
-
-**Nota:** A verificação da conexão será feita automaticamente quando você executar as migrations no próximo passo.
+**Alternativa (via MySQL Workbench):** Crie o schema `todo_list` com collation `utf8mb4_unicode_ci`.
 
 ### 5. Gere a chave da aplicação
 
@@ -383,19 +198,7 @@ php artisan db:seed
 - **Email:** `admin@todolist.com`
 - **Senha:** `password`
 
-### 8. Verificar status das migrations (opcional)
-
-Agora você pode verificar o status das migrations:
-
-```bash
-php artisan migrate:status
-```
-
-Isso mostrará todas as migrations e se foram executadas ou não.
-
-**Nota:** O comando `migrate:status` só funciona APÓS as migrations serem executadas pela primeira vez, pois ele precisa da tabela `migrations` que é criada durante a primeira execução.
-
-### 9. Configure o servidor de desenvolvimento
+### 8. Iniciar o servidor
 
 Inicie o servidor de desenvolvimento do Laravel:
 
@@ -409,161 +212,15 @@ A aplicação estará disponível em: `http://localhost:8000`
 
 ## Opção B: Instalação com Docker
 
-### Pré-requisitos
-- Docker Desktop instalado e rodando
-- Verifique se está funcionando: `docker --version` e `docker-compose --version`
+**Pré-requisito:** Docker Desktop instalado e rodando.
 
-### 1. Clone o repositório
+1. **Crie os arquivos `docker-compose.yml` e `Dockerfile`** (veja estrutura básica abaixo)
+2. **Configure o `.env`** com `DB_HOST=db`, `DB_USERNAME=root`, `DB_PASSWORD=root`
+3. **Inicie:** `docker-compose up -d`
+4. **Execute comandos:** `docker-compose exec app php artisan [comando]`
+5. **Acesse:** `http://localhost:8000`
 
-```bash
-git clone <url-do-repositorio>
-cd laravel-to-do-list
-```
-
-### 2. Crie o arquivo docker-compose.yml
-
-Crie um arquivo `docker-compose.yml` na raiz do projeto:
-
-```yaml
-version: '3.8'
-
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: todo-list-app
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/var/www/html
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-      - DB_DATABASE=todo_list
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
-
-  db:
-    image: mysql:8.0
-    container_name: todo-list-db
-    ports:
-      - "3306:3306"
-    environment:
-      - MYSQL_DATABASE=todo_list
-      - MYSQL_ROOT_PASSWORD=root
-    volumes:
-      - db_data:/var/lib/mysql
-
-volumes:
-  db_data:
-```
-
-### 3. Crie o Dockerfile
-
-Crie um arquivo `Dockerfile` na raiz do projeto:
-
-```dockerfile
-FROM php:8.2-fpm
-
-# Instalar dependências do sistema
-RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
-
-# Instalar Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Instalar Node.js e npm
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
-
-# Configurar diretório de trabalho
-WORKDIR /var/www/html
-
-# Copiar arquivos do projeto
-COPY . .
-
-# Instalar dependências
-RUN composer install --no-dev --optimize-autoloader
-
-# Configurar permissões
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html
-
-# Expor porta
-EXPOSE 8000
-
-# Comando para iniciar
-CMD php artisan serve --host=0.0.0.0 --port=8000
-```
-
-### 4. Configure o arquivo .env
-
-Crie o arquivo `.env` com as configurações do Docker:
-
-```env
-APP_NAME="To-Do List"
-APP_ENV=local
-APP_KEY=
-APP_DEBUG=true
-APP_URL=http://localhost
-
-DB_CONNECTION=mysql
-DB_HOST=db
-DB_PORT=3306
-DB_DATABASE=todo_list
-DB_USERNAME=root
-DB_PASSWORD=root
-
-# ... resto das configurações (veja seção anterior)
-```
-
-### 5. Inicie os containers
-
-```bash
-docker-compose up -d
-```
-
-### 6. Execute comandos dentro do container
-
-```bash
-# Gerar chave da aplicação
-docker-compose exec app php artisan key:generate
-
-# Executar migrations
-docker-compose exec app php artisan migrate
-
-# Executar seeders
-docker-compose exec app php artisan db:seed
-```
-
-### 7. Acesse a aplicação
-
-A aplicação estará disponível em: `http://localhost:8000`
-
-### Comandos úteis do Docker
-
-```bash
-# Ver logs
-docker-compose logs -f
-
-# Parar containers
-docker-compose down
-
-# Parar e remover volumes (apaga banco de dados)
-docker-compose down -v
-
-# Reiniciar containers
-docker-compose restart
-```
+**Nota:** Por ser uma opção mais complexa, recomenda-se usar a Opção A (MySQL local) para testes rápidos. Para produção ou ambientes isolados, Docker é ideal.
 
 ## 📱 Como Usar
 
@@ -730,252 +387,30 @@ php artisan make:model Task -m
 
 ## 🐛 Solução de Problemas
 
-### Erro: "ext-fileinfo * -> it is missing from your system"
+### Extensão PHP faltando
+**Erro: "ext-fileinfo is missing"**
+- Abra `php.ini` (localize com `php --ini`)
+- Descomente: `;extension=fileinfo` → `extension=fileinfo`
+- Reinicie o terminal
 
-A extensão `fileinfo` do PHP não está habilitada. Para habilitar:
+### Erro de conexão com banco
+- Verifique se MySQL está rodando: `Get-Service -Name MySQL80` (Windows) ou `sudo systemctl status mysql` (Linux)
+- Confirme credenciais no `.env`
+- Verifique se o banco existe: `SHOW DATABASES;` no MySQL
 
-1. **Localize o arquivo php.ini:**
-   ```bash
-   php --ini
-   ```
-   Você verá algo como: `C:\php\php.ini`
-
-2. **Abra o arquivo php.ini em um editor de texto** (como Notepad++, VS Code, etc.)
-
-3. **Procure pela linha:**
-   ```ini
-   ;extension=fileinfo
-   ```
-
-4. **Remova o ponto e vírgula (;) do início da linha:**
-   ```ini
-   extension=fileinfo
-   ```
-
-5. **Salve o arquivo**
-
-6. **Reinicie o servidor web** (se estiver usando Apache/Nginx) ou **feche e abra novamente o terminal**
-
-7. **Verifique se a extensão está habilitada:**
-   ```bash
-   php -m | findstr fileinfo
-   ```
-   Se aparecer `fileinfo`, está funcionando!
-
-8. **Tente instalar novamente:**
-   ```bash
-   composer install
-   ```
-
-**Nota:** Se você não encontrar `;extension=fileinfo` no arquivo, adicione a linha `extension=fileinfo` na seção de extensões.
-
-### Erro: "No application encryption key has been specified"
+### Erro 500
 ```bash
-php artisan key:generate
+php artisan config:clear && php artisan cache:clear && php artisan view:clear
 ```
 
-### Erro de conexão com banco de dados
+### MySQL não inicia (Windows)
+- Verifique em Services (`services.msc`) ou via PowerShell: `net start MySQL80`
+- Se necessário, reinstale: `mysqld --install MySQL80` (na pasta bin do MySQL)
 
-**Erro: "SQLSTATE[HY000] [2002] No connection could be made"**
-
-1. Verifique se o MySQL está rodando:
-   - **Windows:** Abra Services (Win+R → `services.msc`) e procure por MySQL
-   - **Linux:** `sudo systemctl status mysql`
-   - **macOS:** `brew services list`
-
-2. Verifique as credenciais no `.env`:
-   ```env
-   DB_HOST=127.0.0.1
-   DB_PORT=3306
-   DB_DATABASE=todo_list
-   DB_USERNAME=root
-   DB_PASSWORD=sua_senha_correta
-   ```
-
-3. Teste a conexão manualmente:
-   ```bash
-   mysql -u root -p
-   ```
-
-4. Verifique se o banco de dados existe:
-   ```sql
-   SHOW DATABASES;
-   ```
-
-**Erro: "SQLSTATE[HY000] [1045] Access denied for user"**
-
-- Verifique se o usuário e senha estão corretos no `.env`
-- Se esqueceu a senha do root, veja como resetar:
-  - **Windows/Linux:** https://dev.mysql.com/doc/refman/8.0/en/resetting-permissions.html
-  - **macOS:** `brew services stop mysql` e siga as instruções de reset
-
-**Erro: "Unknown database 'todo_list'"**
-
-- Crie o banco de dados:
-  ```sql
-  CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-  ```
-
-### Erro 500 após instalação
-```bash
-php artisan config:clear
-php artisan cache:clear
-php artisan view:clear
-```
-
-### Permissões de diretório (Linux/Mac)
-```bash
-chmod -R 775 storage bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache
-```
-
-### Problemas Específicos do MySQL no Windows
-
-**1. MySQL não inicia no Windows**
-
-**Via Services (Serviços):**
-1. Pressione **Win + R**, digite `services.msc` e pressione Enter
-2. Procure por **"MySQL80"** ou **"MySQL"**
-3. Clique com botão direito → **"Iniciar"**
-4. Se aparecer erro, anote a mensagem de erro
-
-**Via PowerShell (como Administrador):**
-```powershell
-# Verificar status do serviço
-Get-Service -Name MySQL80
-
-# Tentar iniciar
-net start MySQL80
-
-# Se não funcionar, verificar se o serviço existe
-Get-Service | Where-Object {$_.DisplayName -like "*MySQL*"}
-```
-
-**Se o serviço não existir ou não iniciar:**
-1. Abra o PowerShell **como Administrador**
-2. Navegue até a pasta bin do MySQL:
-   ```powershell
-   cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"
-   ```
-3. Reinstale o serviço:
-   ```powershell
-   .\mysqld.exe --install MySQL80
-   ```
-4. Inicie o serviço:
-   ```powershell
-   net start MySQL80
-   ```
-
-**2. Verificar logs de erro:**
-
-Os logs do MySQL estão em:
-```
-C:\ProgramData\MySQL\MySQL Server 8.0\Data\*.err
-```
-
-Para ver o último erro:
-```powershell
-Get-Content "C:\ProgramData\MySQL\MySQL Server 8.0\Data\*.err" -Tail 50
-```
-
-**3. Erro: "mysql não é reconhecido como comando"**
-
-**Solução 1 - Adicionar ao PATH:**
-- Veja as instruções no passo 6 da seção de instalação do MySQL
-
-**Solução 2 - Usar caminho completo:**
-```powershell
-"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
-```
-
-**4. Esqueceu a senha do root do MySQL**
-
-**Método 1 - Via arquivo de texto (Recomendado):**
-
-1. Crie um arquivo de texto: `C:\reset_password.txt` com o conteúdo:
-   ```
-   ALTER USER 'root'@'localhost' IDENTIFIED BY 'nova_senha_aqui';
-   ```
-
-2. Pare o serviço MySQL:
-   ```powershell
-   net stop MySQL80
-   ```
-
-3. Inicie o MySQL em modo seguro (sem verificação de senha):
-   ```powershell
-   cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"
-   .\mysqld.exe --init-file=C:\reset_password.txt --console
-   ```
-   Deixe esse terminal aberto!
-
-4. Abra **outro** terminal e conecte:
-   ```powershell
-   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
-   ```
-   (Digite a nova senha que você colocou no arquivo)
-
-5. Feche o MySQL em modo seguro (Ctrl+C no primeiro terminal)
-
-6. Inicie o MySQL normalmente:
-   ```powershell
-   net start MySQL80
-   ```
-
-7. Delete o arquivo de reset:
-   ```powershell
-   Remove-Item C:\reset_password.txt
-   ```
-
-**Método 2 - Usando MySQL Installer (Mais fácil):**
-1. Abra o MySQL Installer
-2. Selecione **"Reconfigure"** no MySQL Server
-3. Siga as instruções e defina uma nova senha
-
-**5. Porta 3306 já está em uso**
-
-Se outro programa estiver usando a porta 3306:
-
-```powershell
-# Ver o que está usando a porta 3306
-netstat -ano | findstr :3306
-
-# Você verá algo como: TCP    0.0.0.0:3306    0.0.0.0:0    LISTENING    1234
-# O número 1234 é o PID (Process ID)
-
-# Ver qual programa é esse PID:
-tasklist | findstr 1234
-
-# Se for outro MySQL ou aplicação, você pode:
-# - Parar o outro serviço
-# - Ou mudar a porta do MySQL no arquivo my.ini
-```
-
-Para mudar a porta do MySQL:
-1. Abra: `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini`
-2. Procure por `port=3306` e mude para outra porta (ex: `port=3307`)
-3. Reinicie o serviço MySQL
-4. Atualize o `.env` do Laravel com a nova porta
-
-### Problemas com Docker
-
-**Erro: "Cannot connect to Docker daemon"**
-
-- Certifique-se de que o Docker Desktop está rodando
-- Verifique se o Docker está iniciado: `docker ps`
-
-**Erro: "Port already in use"**
-
-- Se a porta 8000 ou 3306 já estiver em uso, altere no `docker-compose.yml`:
-  ```yaml
-  ports:
-    - "8001:8000"  # Mude para outra porta
-  ```
-
-**Container não inicia**
-
-- Verifique os logs: `docker-compose logs app`
-- Reconstrua os containers: `docker-compose up -d --build`
+### Docker
+- Docker não conecta: Verifique se Docker Desktop está rodando (`docker ps`)
+- Porta em uso: Altere no `docker-compose.yml`
+- Container não inicia: `docker-compose logs app` para ver erros
 
 ## 📄 Licença
 
