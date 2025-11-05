@@ -345,15 +345,7 @@ SHOW DATABASES;
 
 Você deve ver `todo_list` na lista.
 
-#### 4.3. Verificar conexão com o banco
-
-Para testar se a conexão está funcionando, você pode executar:
-
-```bash
-php artisan migrate:status
-```
-
-Se não aparecer erros de conexão, está tudo certo!
+**Nota:** A verificação da conexão será feita automaticamente quando você executar as migrations no próximo passo.
 
 ### 5. Gere a chave da aplicação
 
@@ -361,15 +353,20 @@ Se não aparecer erros de conexão, está tudo certo!
 php artisan key:generate
 ```
 
+**Importante:** Na primeira execução, o Laravel pode detectar que a tabela de migrations não existe e criar automaticamente, executando todas as migrations. Isso é normal e esperado!
+
 ### 6. Execute as migrations
 
 ```bash
 php artisan migrate
 ```
 
-Isso criará todas as tabelas necessárias:
+Se você já executou `php artisan key:generate` e as migrations foram criadas automaticamente, este comando mostrará que todas as migrations já foram executadas. Se não, ele criará todas as tabelas necessárias.
+
+**Tabelas criadas pelas migrations:**
+- `migrations` - Tabela que registra quais migrations foram executadas
 - `users` - Tabela de usuários para autenticação
-- `tasks` - Tabela de tarefas
+- `tasks` - Tabela de tarefas (com suporte a soft delete)
 - `password_reset_tokens` - Tokens para reset de senha
 - `failed_jobs` - Jobs falhados
 - `personal_access_tokens` - Tokens de acesso pessoal
@@ -386,7 +383,19 @@ php artisan db:seed
 - **Email:** `admin@todolist.com`
 - **Senha:** `password`
 
-### 8. Configure o servidor de desenvolvimento
+### 8. Verificar status das migrations (opcional)
+
+Agora você pode verificar o status das migrations:
+
+```bash
+php artisan migrate:status
+```
+
+Isso mostrará todas as migrations e se foram executadas ou não.
+
+**Nota:** O comando `migrate:status` só funciona APÓS as migrations serem executadas pela primeira vez, pois ele precisa da tabela `migrations` que é criada durante a primeira execução.
+
+### 9. Configure o servidor de desenvolvimento
 
 Inicie o servidor de desenvolvimento do Laravel:
 
