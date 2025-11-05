@@ -49,7 +49,7 @@ Toda requisição HTTP no Laravel passa por um ciclo de vida bem definido, desde
 
 ### Estrutura Atual
 
-Seu projeto atual segue o padrão **MVC (Model-View-Controller)** simples, onde:
+O projeto atual segue o padrão **MVC (Model-View-Controller)** simples, onde:
 
 ```
 Controller → Model (Eloquent) → Database
