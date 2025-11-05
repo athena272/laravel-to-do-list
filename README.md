@@ -59,13 +59,99 @@ Escolha uma das opções abaixo:
 ### Pré-requisitos: Instalar MySQL
 
 #### Windows
-1. Baixe o MySQL Installer em: https://dev.mysql.com/downloads/installer/
-2. Execute o instalador e escolha "Developer Default"
-3. Durante a instalação, defina uma senha para o usuário `root`
-4. Verifique se o MySQL está rodando:
-   - Abra o **Services** (Win+R → `services.msc`)
-   - Procure por "MySQL80" ou "MySQL" e verifique se está "Running"
-   - Ou pelo terminal: `net start MySQL80` (pode precisar de privilégios de administrador)
+
+**Passo a passo completo:**
+
+1. **Baixe o MySQL Installer:**
+   - Acesse: https://dev.mysql.com/downloads/installer/
+   - Escolha a opção **"mysql-installer-community"** (versão web ou offline)
+   - A versão **web** é menor (~2MB) e baixa os componentes durante a instalação
+   - A versão **offline** é maior (~400MB) mas não precisa de internet durante instalação
+
+2. **Execute o instalador:**
+   - Clique com botão direito e escolha **"Executar como administrador"**
+   - Aceite os termos de licença
+   - Escolha **"Developer Default"** (inclui MySQL Server, Workbench, etc.)
+
+3. **Durante a instalação:**
+   - Se aparecer algum aviso sobre dependências faltando (como Visual C++), clique em "Execute" para instalar automaticamente
+   - Aguarde a instalação dos componentes (pode levar alguns minutos)
+   - Na tela **"Type and Networking"**, mantenha as opções padrão:
+     - Config Type: **Development Computer**
+     - Port: **3306** (porta padrão)
+
+4. **Configure o servidor:**
+   - Na tela **"Authentication Method"**, escolha:
+     - **"Use Strong Password Encryption"** (recomendado para MySQL 8.0+)
+   - Na tela **"Accounts and Roles"**:
+     - **Defina uma senha para o usuário `root`** (ANOTE ESSA SENHA, você precisará!)
+     - Opcional: Crie um usuário adicional se desejar
+
+5. **Finalize a instalação:**
+   - Na tela **"Windows Service"**, mantenha:
+     - Windows Service Name: **MySQL80** (ou MySQL)
+     - ✅ **Start the MySQL Server at System Startup** (marcado)
+     - ✅ **Run Windows Service as** → **Standard System Account**
+   - Clique em **"Execute"** para aplicar as configurações
+   - Aguarde a conclusão e clique em **"Finish"**
+
+6. **Adicionar MySQL ao PATH (opcional, mas recomendado):**
+   
+   O MySQL geralmente é instalado em: `C:\Program Files\MySQL\MySQL Server 8.0\bin`
+   
+   Para adicionar ao PATH:
+   - Pressione **Win + X** e escolha **"Sistema"**
+   - Clique em **"Configurações avançadas do sistema"**
+   - Clique em **"Variáveis de Ambiente"**
+   - Em **"Variáveis do sistema"**, encontre **Path** e clique em **"Editar"**
+   - Clique em **"Novo"** e adicione: `C:\Program Files\MySQL\MySQL Server 8.0\bin`
+   - Clique em **"OK"** em todas as janelas
+   - **Feche e abra novamente o terminal** para que as mudanças tenham efeito
+
+7. **Verificar se o MySQL está rodando:**
+
+   **Opção 1 - Via Services (Serviços do Windows):**
+   - Pressione **Win + R**
+   - Digite: `services.msc` e pressione Enter
+   - Procure por **"MySQL80"** ou **"MySQL"**
+   - O status deve estar como **"Em execução"**
+   - Se não estiver, clique com botão direito → **"Iniciar"**
+
+   **Opção 2 - Via Terminal (PowerShell como Administrador):**
+   ```powershell
+   # Verificar status do serviço
+   Get-Service -Name MySQL80
+   
+   # Se não estiver rodando, iniciar:
+   net start MySQL80
+   ```
+
+8. **Testar conexão com o MySQL:**
+   
+   Abra um novo terminal (PowerShell ou CMD) e execute:
+   ```powershell
+   mysql -u root -p
+   ```
+   
+   - Digite a senha que você configurou durante a instalação
+   - Se conseguir conectar, você verá: `mysql>`
+   - Digite `exit;` para sair
+   
+   **Se aparecer erro "mysql não é reconhecido":**
+   - O MySQL não está no PATH, use o caminho completo:
+   ```powershell
+   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+   ```
+   - Ou adicione ao PATH conforme passo 6 acima
+
+9. **MySQL Workbench (opcional, mas útil):**
+   
+   O MySQL Workbench geralmente é instalado automaticamente com o "Developer Default". Você pode usá-lo para:
+   - Gerenciar bancos de dados visualmente
+   - Executar queries SQL
+   - Criar e gerenciar tabelas
+   
+   Procure por "MySQL Workbench" no menu Iniciar.
 
 #### Linux (Ubuntu/Debian)
 ```bash
@@ -187,23 +273,59 @@ DB_PASSWORD=sua_senha_aqui
 
 #### 4.2. Crie o banco de dados
 
-Conecte-se ao MySQL e crie o banco de dados:
+**Para Windows - Você tem 3 opções:**
 
-**Windows:**
-```bash
+**Opção 1: Via Linha de Comando (PowerShell/CMD)**
+
+Se o MySQL está no PATH:
+```powershell
 mysql -u root -p
 ```
 
-**Linux/macOS:**
-```bash
-sudo mysql -u root -p
-# ou
-mysql -u root -p
+Se o MySQL não está no PATH (use o caminho completo):
+```powershell
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
 ```
 
-Depois de conectar, execute:
-
+Depois de conectar (digite a senha quando solicitado), execute:
 ```sql
+CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+exit;
+```
+
+**Opção 2: Via Linha de Comando (sem abrir o MySQL interativamente)**
+
+Se o MySQL está no PATH:
+```powershell
+mysql -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+Se o MySQL não está no PATH:
+```powershell
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+```
+
+**Opção 3: Via MySQL Workbench (Recomendado para iniciantes)**
+
+1. Abra o **MySQL Workbench** (procure no menu Iniciar)
+2. Clique em **"Local instance MySQL80"** (ou clique no ícone de conexão)
+3. Digite a senha do root quando solicitado
+4. No painel lateral esquerdo, clique com botão direito em **"Schemas"**
+5. Selecione **"Create Schema..."**
+6. Em **"Name"**, digite: `todo_list`
+7. Em **"Collation"**, selecione: `utf8mb4_unicode_ci`
+8. Clique em **"Apply"** e depois em **"Finish"**
+9. Pronto! O banco de dados foi criado.
+
+**Para Linux/macOS:**
+
+```bash
+# Conectar ao MySQL
+sudo mysql -u root -p
+# ou (se não precisar de sudo)
+mysql -u root -p
+
+# Depois de conectar, execute:
 CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 exit;
 ```
@@ -211,12 +333,17 @@ exit;
 **Alternativa via linha de comando (sem abrir o MySQL):**
 
 ```bash
-# Windows
-mysql -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# Linux/macOS
 sudo mysql -u root -p -e "CREATE DATABASE todo_list CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 ```
+
+**Verificar se o banco foi criado:**
+
+No terminal MySQL:
+```sql
+SHOW DATABASES;
+```
+
+Você deve ver `todo_list` na lista.
 
 #### 4.3. Verificar conexão com o banco
 
@@ -594,6 +721,45 @@ php artisan make:model Task -m
 
 ## 🐛 Solução de Problemas
 
+### Erro: "ext-fileinfo * -> it is missing from your system"
+
+A extensão `fileinfo` do PHP não está habilitada. Para habilitar:
+
+1. **Localize o arquivo php.ini:**
+   ```bash
+   php --ini
+   ```
+   Você verá algo como: `C:\php\php.ini`
+
+2. **Abra o arquivo php.ini em um editor de texto** (como Notepad++, VS Code, etc.)
+
+3. **Procure pela linha:**
+   ```ini
+   ;extension=fileinfo
+   ```
+
+4. **Remova o ponto e vírgula (;) do início da linha:**
+   ```ini
+   extension=fileinfo
+   ```
+
+5. **Salve o arquivo**
+
+6. **Reinicie o servidor web** (se estiver usando Apache/Nginx) ou **feche e abra novamente o terminal**
+
+7. **Verifique se a extensão está habilitada:**
+   ```bash
+   php -m | findstr fileinfo
+   ```
+   Se aparecer `fileinfo`, está funcionando!
+
+8. **Tente instalar novamente:**
+   ```bash
+   composer install
+   ```
+
+**Nota:** Se você não encontrar `;extension=fileinfo` no arquivo, adicione a linha `extension=fileinfo` na seção de extensões.
+
 ### Erro: "No application encryption key has been specified"
 ```bash
 php artisan key:generate
@@ -654,22 +820,133 @@ chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 ```
 
-### MySQL não inicia no Windows
+### Problemas Específicos do MySQL no Windows
 
-1. Verifique se o serviço está configurado:
-   ```bash
+**1. MySQL não inicia no Windows**
+
+**Via Services (Serviços):**
+1. Pressione **Win + R**, digite `services.msc` e pressione Enter
+2. Procure por **"MySQL80"** ou **"MySQL"**
+3. Clique com botão direito → **"Iniciar"**
+4. Se aparecer erro, anote a mensagem de erro
+
+**Via PowerShell (como Administrador):**
+```powershell
+# Verificar status do serviço
+Get-Service -Name MySQL80
+
+# Tentar iniciar
+net start MySQL80
+
+# Se não funcionar, verificar se o serviço existe
+Get-Service | Where-Object {$_.DisplayName -like "*MySQL*"}
+```
+
+**Se o serviço não existir ou não iniciar:**
+1. Abra o PowerShell **como Administrador**
+2. Navegue até a pasta bin do MySQL:
+   ```powershell
+   cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"
+   ```
+3. Reinstale o serviço:
+   ```powershell
+   .\mysqld.exe --install MySQL80
+   ```
+4. Inicie o serviço:
+   ```powershell
    net start MySQL80
    ```
 
-2. Se não funcionar, tente reinstalar o serviço:
-   ```bash
-   # Na pasta bin do MySQL (geralmente C:\Program Files\MySQL\MySQL Server 8.0\bin)
-   mysqld --install
+**2. Verificar logs de erro:**
+
+Os logs do MySQL estão em:
+```
+C:\ProgramData\MySQL\MySQL Server 8.0\Data\*.err
+```
+
+Para ver o último erro:
+```powershell
+Get-Content "C:\ProgramData\MySQL\MySQL Server 8.0\Data\*.err" -Tail 50
+```
+
+**3. Erro: "mysql não é reconhecido como comando"**
+
+**Solução 1 - Adicionar ao PATH:**
+- Veja as instruções no passo 6 da seção de instalação do MySQL
+
+**Solução 2 - Usar caminho completo:**
+```powershell
+"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+```
+
+**4. Esqueceu a senha do root do MySQL**
+
+**Método 1 - Via arquivo de texto (Recomendado):**
+
+1. Crie um arquivo de texto: `C:\reset_password.txt` com o conteúdo:
+   ```
+   ALTER USER 'root'@'localhost' IDENTIFIED BY 'nova_senha_aqui';
+   ```
+
+2. Pare o serviço MySQL:
+   ```powershell
+   net stop MySQL80
+   ```
+
+3. Inicie o MySQL em modo seguro (sem verificação de senha):
+   ```powershell
+   cd "C:\Program Files\MySQL\MySQL Server 8.0\bin"
+   .\mysqld.exe --init-file=C:\reset_password.txt --console
+   ```
+   Deixe esse terminal aberto!
+
+4. Abra **outro** terminal e conecte:
+   ```powershell
+   "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" -u root -p
+   ```
+   (Digite a nova senha que você colocou no arquivo)
+
+5. Feche o MySQL em modo seguro (Ctrl+C no primeiro terminal)
+
+6. Inicie o MySQL normalmente:
+   ```powershell
    net start MySQL80
    ```
 
-3. Verifique os logs de erro em:
-   - `C:\ProgramData\MySQL\MySQL Server 8.0\Data\*.err`
+7. Delete o arquivo de reset:
+   ```powershell
+   Remove-Item C:\reset_password.txt
+   ```
+
+**Método 2 - Usando MySQL Installer (Mais fácil):**
+1. Abra o MySQL Installer
+2. Selecione **"Reconfigure"** no MySQL Server
+3. Siga as instruções e defina uma nova senha
+
+**5. Porta 3306 já está em uso**
+
+Se outro programa estiver usando a porta 3306:
+
+```powershell
+# Ver o que está usando a porta 3306
+netstat -ano | findstr :3306
+
+# Você verá algo como: TCP    0.0.0.0:3306    0.0.0.0:0    LISTENING    1234
+# O número 1234 é o PID (Process ID)
+
+# Ver qual programa é esse PID:
+tasklist | findstr 1234
+
+# Se for outro MySQL ou aplicação, você pode:
+# - Parar o outro serviço
+# - Ou mudar a porta do MySQL no arquivo my.ini
+```
+
+Para mudar a porta do MySQL:
+1. Abra: `C:\ProgramData\MySQL\MySQL Server 8.0\my.ini`
+2. Procure por `port=3306` e mude para outra porta (ex: `port=3307`)
+3. Reinicie o serviço MySQL
+4. Atualize o `.env` do Laravel com a nova porta
 
 ### Problemas com Docker
 
