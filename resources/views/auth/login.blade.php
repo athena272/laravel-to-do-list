@@ -30,15 +30,20 @@
 
                     <div class="mb-3">
                         <label for="password" class="form-label">Senha</label>
-                        <input type="password" 
-                               class="form-control @error('password') is-invalid @enderror" 
-                               id="password" 
-                               name="password" 
-                               required
-                               placeholder="Digite sua senha">
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <div class="input-group @error('password') has-validation @enderror">
+                            <input type="password" 
+                                   class="form-control @error('password') is-invalid @enderror" 
+                                   id="password" 
+                                   name="password" 
+                                   required
+                                   placeholder="Digite sua senha">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword" aria-label="Mostrar senha">
+                                <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                            </button>
+                            @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
                     </div>
 
                     <div class="mb-3 form-check">
@@ -64,5 +69,33 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+        
+        if (togglePassword && passwordInput && togglePasswordIcon) {
+            togglePassword.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                // Alterna o ícone entre olho aberto e fechado
+                if (type === 'password') {
+                    togglePasswordIcon.classList.remove('bi-eye-slash');
+                    togglePasswordIcon.classList.add('bi-eye');
+                    togglePassword.setAttribute('aria-label', 'Mostrar senha');
+                } else {
+                    togglePasswordIcon.classList.remove('bi-eye');
+                    togglePasswordIcon.classList.add('bi-eye-slash');
+                    togglePassword.setAttribute('aria-label', 'Ocultar senha');
+                }
+            });
+        }
+    });
+</script>
+@endpush
 @endsection
 

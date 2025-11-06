@@ -64,6 +64,12 @@
         .pagination {
             margin-top: 2rem;
         }
+        /* Remove box-shadow no foco dos inputs, textareas e selects */
+        .form-control:focus,
+        .form-select:focus,
+        textarea.form-control:focus {
+            box-shadow: none !important;
+        }
     </style>
     
     @stack('styles')
