@@ -2,8 +2,6 @@
 
 Aplicação web desenvolvida em Laravel para gerenciamento de lista de tarefas (to-do list), desenvolvida como parte de um teste técnico para vaga de estágio em desenvolvimento web.
 
-🔗 [Clique aqui para assistir no Google Drive](https://drive.google.com/file/d/16Ps4pLa-E9lVU-SSsGnKCGoYKz8L29dP/view?usp=sharing)
-
 ## 🚀 Funcionalidades
 
 - ✅ **CRUD completo de tarefas** (Criar, Ler, Atualizar, Excluir)
@@ -425,5 +423,3 @@ Desenvolvido como parte de um teste técnico para vaga de estágio em desenvolvi
 ---
 
 **Nota:** Esta aplicação foi desenvolvida seguindo as melhores práticas do Laravel e está pronta para ser expandida com novas funcionalidades conforme necessário.
-
-🔗 [Clique aqui para assistir no Google Drive](https://drive.google.com/file/d/16Ps4pLa-E9lVU-SSsGnKCGoYKz8L29dP/view?usp=sharing)
